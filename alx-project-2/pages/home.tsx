@@ -1,5 +1,7 @@
 import Card from "@/components/common/Card";
-
+import PostModal from "@/components/common/PostModal";
+import { CardProps } from "@/interfaces";
+import { useState } from "react";
 const cardData = [
   {
     title: "Welcome",
@@ -20,18 +22,37 @@ const cardData = [
 ]
 
 const Home = () => {
+    const [openModal, setOpenModal] = useState(false);
+    const [data, setData] = useState(cardData);
+
+    const handleButtonClick = () => {
+        setOpenModal(true);
+    }
+
+    const handleAddContent = (formData:CardProps) => {
+        setData([...data, formData])
+    }
+
     return (
-        <div className="min-h-dvh py-4 flex flex-col items-center">
-            <h1 className="text-2xl text-center mb-4">Welcome to the Home Page</h1>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 items-center justify-center">
+        <div className="min-h-dvh py-4 flex flex-col px-6 gap-6">
+            <div className="flex flex-col gap-2 sm:flex-row justify-between items-center w-full mb-4">
+                <h1 className="text-2xl">Welcome to the Home Page</h1>
+                <button onClick={handleButtonClick} className="border px-6 py-2 rounded-md sm:mt-0 mt-4 hover:bg-gray-100 transition-all duration-150 transform hover:scale-105">Add content</button>
+
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 w-full justify-items-center sm:justify-items-start">
                 {
-                    cardData.map(({title, content}) => {
+                    data.map(({title, content}) => {
                         return (
                             <Card key={title} title={title} content={content}/>
                         )
                     })
                 }
             </div>
+
+            {
+                openModal && <PostModal setOpenModal={setOpenModal} handleAddContent={handleAddContent} />
+            }
 
         </div>
     )
